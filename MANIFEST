@@ -4,6 +4,7 @@ lib/DataStructure/DoubleList.pm
 lib/DataStructure/DoubleList/Node.pm
 lib/DataStructure/LinkedList.pm
 lib/DataStructure/LinkedList/Node.pm
+LICENCE
 Makefile.PL
 MANIFEST
 t/30-doublelist.t

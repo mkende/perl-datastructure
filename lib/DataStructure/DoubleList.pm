@@ -42,7 +42,8 @@ sub new ($class) {
 =head2 METHODS
 
 All the functions below are class methods that should be called on a
-B<DataStructure::DoubleList> object.
+B<DataStructure::DoubleList> object. Unless documented, they run in constant
+time.
 
 =head3 I<first()>
 
@@ -136,7 +137,6 @@ sub shift ($self) {
   return;
 }
 
-
 =pod
 
 =head3 I<size()>
@@ -149,6 +149,39 @@ sub size ($self) {
   return $self->{size};
 }
 
+=pod
+
+=head3 I<empty()>
+
+Returns whether the list is empty.
+
+=cut
+
+sub empty ($self) {
+  return $self->size() == 0;
+}
+
+=pod
+
+=head3 I<values()>
+
+Returns all the values of the list, as a normal Perl list. This runs in linear
+time with the size of the list.
+
+=cut
+
+sub values ($self) {
+  return $self->size() unless wantarray;
+  my @ret = (0) x $self->size();
+  my $i = 0;
+  my $cur = $self->first();
+  while (defined $cur) {
+    $ret[$i++] = $cur->value();
+    $cur = $cur->next();
+  }
+  return @ret;
+}
+
 sub DESTROY ($self) {
   my $next = $self->{first};
   while (defined $next) {
@@ -158,5 +191,45 @@ sub DESTROY ($self) {
   }
   return;
 }
+
+=pod
+
+=head1 AUTHOR
+
+Mathias Kende <mathias@cpan.org>
+
+=head1 LICENCE
+
+Copyright 2021 Mathias Kende
+
+This program is distributed under the MIT (X11) License:
+L<http://www.opensource.org/licenses/mit-license.php>
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+=head1 SEE ALSO
+
+L<DataStructure::LinkedList>, L<List::DoubleLinked>
+
+=cut
 
 1;
