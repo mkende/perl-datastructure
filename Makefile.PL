@@ -7,7 +7,7 @@ WriteMakefile(
     NAME             => 'DataStructure',
     AUTHOR           => q{Mathias Kende <mathias@cpan.org>},
     VERSION_FROM     => 'lib/DataStructure.pm',
-    ABSTRACT         => 'Collection of useful data-structure in pure Perl',
+    ABSTRACT         => 'Collection of useful data-structures in pure Perl',
     LICENSE          => 'mit',
     MIN_PERL_VERSION => '5.024',
     MAN3PODS         => {},
