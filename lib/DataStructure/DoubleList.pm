@@ -42,8 +42,8 @@ sub new ($class) {
 =head2 METHODS
 
 All the functions below are class methods that should be called on a
-B<DataStructure::DoubleList> object. Unless documented, they run in constant
-time.
+B<DataStructure::DoubleList> object. Unless documented otherwise, they run in
+constant time.
 
 =over 4
 

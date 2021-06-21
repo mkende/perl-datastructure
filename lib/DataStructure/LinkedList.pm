@@ -28,14 +28,37 @@ offers a richer interface.
 
 =head2 CONSTRUCTOR
 
-C<< DataStructure::LinkedList->new() >>
+C<< DataStructure::LinkedList->new(%options) >>
 
 Creates an empty list.
 
+The following options are available:
+
+=over 4
+
+=item reverse
+
+By default this class implements the standard C<shift> and C<unshift> methods
+that operate on the beginning of the list and the C<push> method that operates
+on the end of the list. And C<pop> is a synonym for C<shift> (so not the
+opposite of C<push>).
+
+If the C<reverse> option is set to a true value then the semantics of the list
+is reversed and C<pop> and C<push> operate on the beginning of the list,
+C<unshift> operates on the end of the list and C<shift> becomes a synonym for
+C<pop>.
+
+=back
+
 =cut
 
-sub new ($class) {
-  return bless { size => 0, first => undef}, $class;
+sub new ($class, %options) {
+  return bless {
+    size => 0,
+    first => undef,
+    last => undef,
+    reverse => $options{reverse} // 0,
+  }, $class;
 }
 
 =pod
@@ -43,8 +66,8 @@ sub new ($class) {
 =head2 METHODS
 
 All the functions below are class methods that should be called on a
-B<DataStructure::LinkedList> object. Unless documented, they run in constant
-time.
+B<DataStructure::LinkedList> object. Unless documented otherwise, they run in
+constant time.
 
 =over 4
 
@@ -61,24 +84,74 @@ sub first ($self) {
 
 =pod
 
+=item last()
+
+Returns the last L<DataStructure::LinkedList::Node> of the list, or B<undef> if
+the list is empty.
+
+=cut
+
+sub last ($self) {
+  return $self->{last};
+}
+
+# Actual unshift that always operates on the beginning of the list.
+sub _unshift ($self, $value) {
+  my $new_node = DataStructure::LinkedList::Node->new($self, $self->{first}, $value);
+  $self->{first} = $new_node;
+  $self->{last} = $new_node unless defined $self->{last};
+  $self->{size}++;
+  return $new_node;
+}
+
+# Actual push that always operates on the end of the list.
+sub _push ($self, $value) {
+  my $new_node = DataStructure::LinkedList::Node->new($self, undef, $value);
+  if (defined $self->{last}) {
+    $self->{last}{next} = $new_node;
+  } else {
+    $self->{first} = $new_node;
+  }
+  $self->{last} = $new_node;
+  $self->{size}++;
+  return $new_node;
+}
+
+# Actual shift that always operates on the beginning of the list.
+sub _shift ($self) {
+  return unless defined $self->{first};
+  my $old_first = $self->first();
+  $self->{first} = $old_first->next();
+  $self->{last} = undef unless defined $self->{first};
+  return $old_first->_delete_first();
+}
+
+=pod
+
 =item unshift($value)
 
 Adds a new node at the beginning of the list with the given value. Returns the
 newly added node.
 
-For conveniance, C<push()> can be used as a synonym of C<unshift()>.
-
 =cut
 
 sub unshift ($self, $value) {
-  my $new_node = DataStructure::LinkedList::Node->new($self, $self->{first}, $value);
-  $self->{first} = $new_node;
-  $self->{size}++;
-  return $new_node;
+  return $self->_push($value) if $self->{reverse};
+  return $self->_unshift($value);
 }
 
+=pod
+
+=item push($value)
+
+Adds a new node at the end of the list with the given value. Returns the
+newly added node.
+
+=cut
+
 sub push ($self, $value) {
-  return $self->unshift($value);
+  return $self->_unshift($value) if $self->{reverse};
+  return $self->_push($value);
 }
 
 =pod
@@ -89,19 +162,16 @@ Removes the first node of the list and returns its value. Returns B<undef> if
 the list is empty. Note that the method can also return B<undef> if the first
 node’s value is B<undef>
 
-For conveniance, C<pop()> can be used as a synonym of C<shift()>.
+For convenience, C<pop()> can be used as a synonym of C<shift()>.
 
 =cut
 
 sub shift ($self) {
-  return unless defined $self->{first};
-  my $old_first = $self->first();
-  $self->{first} = $old_first->next();
-  return $old_first->_delete_first();
+  return $self->_shift();
 }
 
 sub pop ($self) {
-  $self->shift();
+  return $self->_shift();
 }
 
 =pod
@@ -147,6 +217,37 @@ sub values ($self) {
     $cur = $cur->next();
   }
   return @ret;
+}
+
+# Runs a consistency check of the list. Assumes that tests are running with
+# Test::More.
+sub _self_check ($self, $name) {
+  eval { use Test2::Tools::Compare qw(is T D U); use Test2::Tools::Subtest };
+  subtest_streamed $name => sub {
+    my $s = $self->{size};
+    is($s >= 0, T(), 'Size is non-negative');
+    if ($s == 0) {
+      is($self->{first}, U(), 'No first when size is 0');
+      is($self->{last}, U(), 'No last when size is 0');
+    } else {
+      is($self->{first}, D(), 'Has first when size is not 0');
+      is($self->{last}, D(), 'Has last when size is not 0');
+      my $n = $self->{first};
+      my $c = 0;
+      while ($n) {
+        $c++;
+        is($n->{list} == $self, T(), 'Self pointer in node');
+        if ($c < $s) {
+          is($n->{next}, D(), 'Node has next element');
+        } else {
+          is($n->{next}, U(), 'Node has no next element');
+          is($n == $self->{last}, T(), 'Correct last element');
+        }
+        $n = $n->{next};
+      }
+      is($c, $s, 'Correct node count');
+    }
+  };
 }
 
 sub DESTROY ($self) {

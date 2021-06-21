@@ -97,6 +97,7 @@ The current node can still be used after that call.
 sub insert_after ($self, $value) {
    my $new_node = new(ref $self, $self->{list}, $self->{next}, $value);
    $self->{next} = $new_node;
+   $self->{list}{last} = $new_node unless defined $new_node->{next};
    $self->{list}{size}++;
    return $new_node;
 }
