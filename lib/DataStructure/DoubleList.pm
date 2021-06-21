@@ -27,7 +27,7 @@ See also L<DataStructure::LinkedList> for a non double-linked list version.
 
 =head2 CONSTRUCTOR
 
-C<DataStructure::DoubleList->new()>
+C<< DataStructure::DoubleList->new() >>
 
 Creates an empty list.
 
@@ -45,7 +45,9 @@ All the functions below are class methods that should be called on a
 B<DataStructure::DoubleList> object. Unless documented, they run in constant
 time.
 
-=head3 I<first()>
+=over 4
+
+=item first()
 
 Returns the first L<DataStructure::DoubleList::Node> of the list, or B<undef> if
 the list is empty.
@@ -58,7 +60,7 @@ sub first ($self) {
 
 =pod
 
-=head3 I<last()>
+=item last()
 
 Returns the last L<DataStructure::DoubleList::Node> of the list, or B<undef> if
 the list is empty.
@@ -71,7 +73,7 @@ sub last ($self) {
 
 =pod
 
-=head3 I<push($value)>
+=item push($value)
 
 Adds a new node at the end of the list with the given value. Returns the newly
 added node.
@@ -90,7 +92,7 @@ sub push ($self, $value) {
 
 =pod
 
-=head3 I<unshift($value)>
+=item unshift($value)
 
 Adds a new node at the beginning of the list with the given value. Returns the
 newly added node.
@@ -108,7 +110,7 @@ sub unshift ($self, $value) {
 
 =pod
 
-=head3 I<pop()>
+=item pop()
 
 Removes the last node of the list and returns its value. Returns B<undef> if the
 list is empty. Note that the method can also return B<undef> if the last node’s
@@ -124,7 +126,7 @@ sub pop ($self) {
 
 =pod
 
-=head3 I<shift()>
+=item shift()
 
 Removes the first node of the list and returns its value. Returns B<undef> if
 the list is empty. Note that the method can also return B<undef> if the first
@@ -139,7 +141,7 @@ sub shift ($self) {
 
 =pod
 
-=head3 I<size()>
+=item size()
 
 Returns the number of nodes in the list.
 
@@ -151,7 +153,7 @@ sub size ($self) {
 
 =pod
 
-=head3 I<empty()>
+=item empty()
 
 Returns whether the list is empty.
 
@@ -163,7 +165,7 @@ sub empty ($self) {
 
 =pod
 
-=head3 I<values()>
+=item values()
 
 Returns all the values of the list, as a normal Perl list. This runs in linear
 time with the size of the list.
@@ -193,6 +195,12 @@ sub DESTROY ($self) {
 }
 
 =pod
+
+=back
+
+=head1 SEE ALSO
+
+L<DataStructure::LinkedList>, L<List::DoubleLinked>
 
 =head1 AUTHOR
 
@@ -225,10 +233,6 @@ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
-
-=head1 SEE ALSO
-
-L<DataStructure::LinkedList>, L<List::DoubleLinked>
 
 =cut
 

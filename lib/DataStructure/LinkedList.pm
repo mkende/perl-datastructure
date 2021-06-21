@@ -28,7 +28,7 @@ offers a richer interface.
 
 =head2 CONSTRUCTOR
 
-C<DataStructure::LinkedList->new()>
+C<< DataStructure::LinkedList->new() >>
 
 Creates an empty list.
 
@@ -46,7 +46,9 @@ All the functions below are class methods that should be called on a
 B<DataStructure::LinkedList> object. Unless documented, they run in constant
 time.
 
-=head3 I<first()>
+=over 4
+
+=item first()
 
 Returns the first L<DataStructure::LinkedList::Node> of the list, or B<undef> if
 the list is empty.
@@ -59,12 +61,12 @@ sub first ($self) {
 
 =pod
 
-=head3 I<unshift($value)>
+=item unshift($value)
 
 Adds a new node at the beginning of the list with the given value. Returns the
 newly added node.
 
-For conveniance, I<push()> can be used as a synonym of I<unshift()>.
+For conveniance, C<push()> can be used as a synonym of C<unshift()>.
 
 =cut
 
@@ -81,13 +83,13 @@ sub push ($self, $value) {
 
 =pod
 
-=head3 I<shift()>
+=item shift()
 
 Removes the first node of the list and returns its value. Returns B<undef> if
 the list is empty. Note that the method can also return B<undef> if the first
 node’s value is B<undef>
 
-For conveniance, I<pop()> can be used as a synonym of I<shift()>.
+For conveniance, C<pop()> can be used as a synonym of C<shift()>.
 
 =cut
 
@@ -104,7 +106,7 @@ sub pop ($self) {
 
 =pod
 
-=head3 I<size()>
+=item size()
 
 Returns the number of nodes in the list.
 
@@ -116,7 +118,7 @@ sub size ($self) {
 
 =pod
 
-=head3 I<empty()>
+=item empty()
 
 Returns whether the list is empty.
 
@@ -128,7 +130,7 @@ sub empty ($self) {
 
 =pod
 
-=head3 I<values()>
+=item values()
 
 Returns all the values of the list, as a normal Perl list. This runs in linear
 time with the size of the list.
@@ -158,6 +160,12 @@ sub DESTROY ($self) {
 }
 
 =pod
+
+=back
+
+=head1 SEE ALSO
+
+L<DataStructure::DoubleList>
 
 =head1 AUTHOR
 
@@ -190,10 +198,6 @@ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
-
-=head1 SEE ALSO
-
-L<DataStructure::DoubleList>
 
 =cut
 
