@@ -11,6 +11,12 @@ no warnings 'experimental::signatures';
 
 use DataStructure::LinkedList::Node;
 
+use parent qw(DataStructure::Queue);
+
+package DataStructure::ReverseLinkedList {
+  use parent qw(DataStructure::LinkedList DataStructure::Queue DataStructure::Stack);
+}
+
 =pod
 
 =head1 NAME
@@ -53,6 +59,10 @@ C<pop>.
 =cut
 
 sub new ($class, %options) {
+  if ($options{reverse}) {
+    die unless $class eq 'DataStructure::LinkedList';
+    $class = 'DataStructure::ReverseLinkedList';
+  }
   return bless {
     size => 0,
     first => undef,
@@ -250,6 +260,8 @@ sub _self_check ($self, $name) {
   };
 }
 
+# The destructor is not strictly needed because all the nodes don’t have cyclic
+# references. But let’s keep it.
 sub DESTROY ($self) {
   my $next = $self->{first};
   while (defined $next) {

@@ -11,6 +11,8 @@ no warnings 'experimental::signatures';
 
 use DataStructure::DoubleList::Node;
 
+use parent qw(DataStructure::Queue DataStructure::Stack);
+
 =pod
 
 =head1 NAME
